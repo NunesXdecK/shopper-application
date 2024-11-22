@@ -1,0 +1,9 @@
+curl --location --request GET 'http://localhost:3001/user' --header 'Content-Type: application/json'
+
+curl --location --request GET 'http://localhost:3001/user/04676326543080642' --header 'Content-Type: application/json'
+
+curl --location --request POST 'http://localhost:3001/user' --header 'Content-Type: application/json' --data '{ "name": "José", "email": "jose.neto@jose.com" }'
+
+curl --location --request POST 'http://localhost:3001/user' --header 'Content-Type: application/json' --data '{ "name": "", "email": "jose.neto@jose.com" }'
+
+curl --location --request PUT 'http://localhost:3001/user/04676326543080642' --header 'Content-Type: application/json' --data '{ "name": "José", "email": "jose.neto@jose.com", "password": "jose.neto" }'

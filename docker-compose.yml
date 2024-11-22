@@ -1,0 +1,30 @@
+services:
+  backend:
+    container_name: shopper-backend
+    image: shopper-backend:1.0.0
+    build:
+      context: ./backend/user/
+      dockerfile: .docker/Dockerfile
+    ports:
+      - "8080:3001"
+    volumes:
+      - ./backend/user/:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=homologation
+      - GOOGLE_API_KEY=$(GOOGLE_API_KEY)
+      - MOCK_API_URL=https://64e2aaa9ab00373588191710.mockapi.io/api/v1/
+    command: npm run dev
+
+  frontend:
+    image: shopper-frontend:1.0.0
+    build:
+      context: ./frontend/user/
+      dockerfile: .docker/Dockerfile
+    ports:
+      - "80:5173"
+    volumes:
+      - ./frontend/user:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=homologation
