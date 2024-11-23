@@ -20,6 +20,7 @@ export class Driver {
   valuation;
   createdAt;
   updatedAt;
+  rideValue;
   description;
   lastValuationMessage;
 
@@ -45,5 +46,10 @@ export class Driver {
     this.updatedAt = updatedAt;
     this.description = description;
     this.lastValuationMessage = lastValuationMessage;
+    this.rideValue = 0;
+  }
+
+  value(kilometer: number) {
+    this.rideValue = Number(this.tax || 0) * kilometer;
   }
 }

@@ -12,7 +12,7 @@ services:
       - /app/node_modules
     environment:
       - NODE_ENV=development
-      - GOOGLE_API_KEY=$(GOOGLE_API_KEY)
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
       - DATABASE_URL=postgresql://postgres:password@shopper-postgres:5432/shopperdb
     depends_on:
       - shopper-postgres
@@ -31,7 +31,8 @@ services:
   #     - /app/node_modules
   #   environment:
   #     - NODE_ENV: development
-  #     - BACKEND_URL: http://localhost:8080/
+  #     - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+  #     - BACKEND_URL: http://shopper-backend:8080/
   #   depends_on:
   #       - shopper-backend
 

@@ -1,6 +1,6 @@
 import { User, UserInput } from "../domains/user.model";
 import { UserRepository } from "../domains/user-repository.type";
-import { ORMRepository } from "../../../core/domains/ORMRepository.type";
+import { ORMRepository } from "../../../core/domains/orm-repository.type";
 
 export class UserORMRepository implements UserRepository {
   constructor(private readonly userRepository: ORMRepository<User>) {}
@@ -10,9 +10,10 @@ export class UserORMRepository implements UserRepository {
   }
 
   async findById(id: string): Promise<User> {
+    if (!id) throw new Error("Id not informed.");
     const user = await this.userRepository.findOne({ where: { id } });
     if (!user) {
-      throw new Error("User not find!");
+      throw new Error("User not find.");
     }
     return user;
   }

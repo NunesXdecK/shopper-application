@@ -20,11 +20,11 @@ export class Bootstrap {
   #externalServices: ExternalService[];
 
   constructor({
-    modules,
     httpServer,
     logService,
-    middlewares,
-    externalServices,
+    modules = [],
+    middlewares = [],
+    externalServices = [],
   }: Props) {
     this.#modules = modules;
     this.#httpServer = httpServer;

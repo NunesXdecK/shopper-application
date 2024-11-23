@@ -9,12 +9,13 @@ import { UserModuleFactory } from "../../modules/user/factories/user-module.fact
 import { PostRequestFeedbackMiddleware } from "../middlewares/post-request-feedback.middleware";
 import { ExternalService } from "../../core/domains/external-service.type";
 import { TypeORMPostgresDatabase } from "../db/db-init.module";
+import { RideModuleFactory } from "../../modules/ride/factories/ride-module.factory";
 
 export class BootstrapFactory {
   static build() {
     const httpServer = new ExpressHttpServer();
     const logService = new ConsoleLogService();
-    const modules = [UserModuleFactory.build()];
+    const modules = [UserModuleFactory.build(), RideModuleFactory.build()];
     const endRequestMiddleware = new PostRequestFeedbackMiddleware().process(
       logService
     );

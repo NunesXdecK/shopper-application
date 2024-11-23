@@ -7,7 +7,7 @@ import { GetUserByIdUseCase } from "../usecases/get-user-by-id.usecase";
 import { ExpressRouter } from "../../../infra/routers/express-http.router";
 import { UserORMRepository } from "../services/user-orm-repository.service";
 import { ConsoleLogService } from "../../../infra/services/console-log.service";
-import { ORMRepository } from "../../../core/domains/ORMRepository.type";
+import { ORMRepository } from "../../../core/domains/orm-repository.type";
 import { User as UserModel } from "../domains/user.model";
 import { User } from "../../../infra/db/entities/user.entity";
 

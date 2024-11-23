@@ -1,3 +1,4 @@
+import { Params } from "../../../core/domains/route-calculator-service.type";
 import { User, UserInput } from "../../user/domains/user.model";
 
 export type RideInput = {
@@ -12,7 +13,7 @@ export type RideInput = {
   updatedAt: Date;
 };
 
-export class Driver {
+export class Ride {
   id;
   user;
   driver;
@@ -36,7 +37,7 @@ export class Driver {
     destinyAddressLog,
   }: Partial<RideInput>) {
     if (!user || user?.length === 0) this.#error = "User not found.";
-    if (!driver || driver?.length === 0) this.#error += "Diver not found.";
+    // if (!driver || driver?.length === 0) this.#error += "Driver not found.";
     if (
       !originAddressLat ||
       !originAddressLog ||
@@ -67,5 +68,22 @@ export class Driver {
     this.originAddressLog = originAddressLog;
     this.destinyAddressLat = destinyAddressLat;
     this.destinyAddressLog = destinyAddressLog;
+  }
+
+  get getRoute(): Params {
+    return {
+      origin: {
+        latitude: Number(this.originAddressLat),
+        longitude: Number(this.originAddressLog),
+      },
+      destination: {
+        latitude: Number(this.destinyAddressLat),
+        longitude: Number(this.destinyAddressLog),
+      },
+    };
+  }
+
+  async calculate(driverValue: number, kilometers: number) {
+    return driverValue * kilometers;
   }
 }

@@ -120,7 +120,6 @@ describe("UserRouter", () => {
           status: (() => response) as any,
         };
         const routerHandler = handler.mock.calls[callIndex][1];
-        console.log(routerHandler);
         await routerHandler(request, response);
         expect(useCase.execute).toHaveBeenCalled();
       });

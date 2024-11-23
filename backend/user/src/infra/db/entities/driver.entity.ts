@@ -24,7 +24,7 @@ export class Driver implements DriverInput {
   @Column("float")
   tax: number;
 
-  @Column()
+  @Column("float")
   minimumKM: number;
 
   @Column()

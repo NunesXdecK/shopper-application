@@ -7,9 +7,11 @@ export type HttpMethod =
   | HttpMethods.DELETE
   | string;
 
+export type HttpHeaders = { [label: string]: string };
+
 export type HttpRequestArgs = {
   method?: HttpMethod;
-  headers?: { [label: string]: string };
+  headers?: HttpHeaders;
   body?: { [label: string]: string } | string;
 };
 
@@ -27,7 +29,7 @@ export type Request = {
   url: string;
   method: string;
   baseUrl: string;
-  body: Object;
+  body: any;
   params: {
     [label: string]: any;
   };

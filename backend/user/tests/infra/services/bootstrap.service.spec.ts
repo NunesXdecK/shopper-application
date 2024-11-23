@@ -39,10 +39,11 @@ describe("Bootstrap", () => {
 
   it("should initialize the server and log the initialization message", () => {
     new Bootstrap({
+      modules: [],
+      middlewares: [],
+      externalServices: [],
       httpServer: httpServerMock,
       logService: logServiceMock,
-      middlewares: [],
-      modules: [],
     });
 
     expect(httpServerMock.useMiddleware).not.toHaveBeenCalled();
@@ -55,10 +56,11 @@ describe("Bootstrap", () => {
   it("should register middlewares and log their initialization", () => {
     const midMock = middlewareMock.process();
     new Bootstrap({
+      modules: [],
+      externalServices: [],
+      middlewares: [midMock],
       httpServer: httpServerMock,
       logService: logServiceMock,
-      middlewares: [midMock],
-      modules: [],
     });
 
     expect(httpServerMock.useMiddleware).toHaveBeenCalledWith(midMock);
@@ -69,9 +71,10 @@ describe("Bootstrap", () => {
 
   it("should register modules and log their initialization", () => {
     new Bootstrap({
+      middlewares: [],
+      externalServices: [],
       httpServer: httpServerMock,
       logService: logServiceMock,
-      middlewares: [],
       modules: [moduleMock, new MockModule() as unknown as Module],
     });
 
@@ -88,10 +91,11 @@ describe("Bootstrap", () => {
 
   it("should return the httpServer app via the app getter", () => {
     const bootstrap = new Bootstrap({
+      modules: [],
+      middlewares: [],
+      externalServices: [],
       httpServer: httpServerMock,
       logService: logServiceMock,
-      middlewares: [],
-      modules: [],
     });
 
     expect(bootstrap.app).toBe(httpServerMock.app);
@@ -107,10 +111,11 @@ describe("Bootstrap", () => {
     };
 
     new Bootstrap({
+      modules: [],
+      externalServices: [],
       httpServer: httpServerMock,
       logService: logServiceMock,
       middlewares: [FailingMiddleware],
-      modules: [],
     });
 
     expect(logServiceMock.log).toHaveBeenCalledTimes(3);
@@ -132,10 +137,11 @@ describe("Bootstrap", () => {
     };
 
     new Bootstrap({
+      middlewares: [],
+      externalServices: [],
       httpServer: httpServerMock,
       logService: logServiceMock,
-      middlewares: [],
-      modules: [failingModule, new MockModule as unknown as Module],
+      modules: [failingModule, new MockModule() as unknown as Module],
     });
 
     expect(logServiceMock.log).toHaveBeenCalledTimes(5);
