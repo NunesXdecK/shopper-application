@@ -11,20 +11,44 @@ services:
       - ./backend/user/:/app
       - /app/node_modules
     environment:
-      - NODE_ENV=homologation
+      - NODE_ENV=development
       - GOOGLE_API_KEY=$(GOOGLE_API_KEY)
-      - MOCK_API_URL=https://64e2aaa9ab00373588191710.mockapi.io/api/v1/
-    command: npm run dev
+      - DATABASE_URL=postgresql://postgres:password@shopper-postgres:5432/shopperdb
+    depends_on:
+      - shopper-postgres
+    networks:
+      - app_network
 
-  frontend:
-    image: shopper-frontend:1.0.0
-    build:
-      context: ./frontend/user/
-      dockerfile: .docker/Dockerfile
-    ports:
-      - "80:5173"
-    volumes:
-      - ./frontend/user:/app
-      - /app/node_modules
+  # frontend:
+  #   image: shopper-frontend:1.0.0
+  #   build:
+  #     context: ./frontend/user/
+  #     dockerfile: .docker/Dockerfile
+  #   ports:
+  #     - "80:5173"
+  #   volumes:
+  #     - ./frontend/user:/app
+  #     - /app/node_modules
+  #   environment:
+  #     - NODE_ENV: development
+  #     - BACKEND_URL: http://localhost:8080/
+  #   depends_on:
+  #       - shopper-backend
+
+  shopper-postgres:
+    image: postgres:15
+    container_name: shopper-postgres
     environment:
-      - NODE_ENV=homologation
+      - POSTGRES_DB=shopperdb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./database:/var/lib/postgresql/data
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge

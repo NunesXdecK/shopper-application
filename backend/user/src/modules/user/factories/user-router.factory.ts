@@ -1,18 +1,23 @@
-import { ExpressRouter } from "../../../infra/routers/express-http.router";
-import { ConsoleLogService } from "../../../infra/services/console-log.service";
-import { FetchHttpService } from "../../../infra/services/fetch-http.service";
 import { UserRouter } from "../routers/user.router";
-import { UserMemoryRepository } from "../services/user-memory-repository.service";
+import { TypeORM } from "../../../infra/db/configs/type-orm.config";
 import { CreateUserUseCase } from "../usecases/create-user.usecase";
-import { GetUserByIdUseCase } from "../usecases/get-user-by-id.usecase";
-import { GetUserListUsecase } from "../usecases/get-user-list.usecase";
 import { UpdateUserUseCase } from "../usecases/update-user.usecase";
+import { GetUserListUsecase } from "../usecases/get-user-list.usecase";
+import { GetUserByIdUseCase } from "../usecases/get-user-by-id.usecase";
+import { ExpressRouter } from "../../../infra/routers/express-http.router";
+import { UserORMRepository } from "../services/user-orm-repository.service";
+import { ConsoleLogService } from "../../../infra/services/console-log.service";
+import { ORMRepository } from "../../../core/domains/ORMRepository.type";
+import { User as UserModel } from "../domains/user.model";
+import { User } from "../../../infra/db/entities/user.entity";
 
 export class UserRouterFactory {
   static build(): UserRouter {
-    const httpService = new FetchHttpService();
+    const userRepository = TypeORM.getRepository(User);
     const logService = new ConsoleLogService();
-    const repository = new UserMemoryRepository();
+    const repository = new UserORMRepository(
+      userRepository as unknown as ORMRepository<UserModel>
+    );
     const router = new ExpressRouter();
     const useCases = {
       getUseCase: new GetUserListUsecase({ userRepository: repository }),

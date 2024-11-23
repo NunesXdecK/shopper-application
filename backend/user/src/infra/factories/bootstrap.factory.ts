@@ -7,14 +7,17 @@ import { ExpressHttpServer } from "../servers/express-http.server";
 import { ConsoleLogService } from "../services/console-log.service";
 import { UserModuleFactory } from "../../modules/user/factories/user-module.factory";
 import { PostRequestFeedbackMiddleware } from "../middlewares/post-request-feedback.middleware";
+import { ExternalService } from "../../core/domains/external-service.type";
+import { TypeORMPostgresDatabase } from "../db/db-init.module";
 
 export class BootstrapFactory {
   static build() {
     const httpServer = new ExpressHttpServer();
     const logService = new ConsoleLogService();
     const modules = [UserModuleFactory.build()];
-    const endRequestMiddleware =
-      new PostRequestFeedbackMiddleware().process(logService);
+    const endRequestMiddleware = new PostRequestFeedbackMiddleware().process(
+      logService
+    );
     const middlewares: RequestHandler<void>[] = [
       express.json() as any,
       cookieParser() as any,
@@ -22,11 +25,13 @@ export class BootstrapFactory {
       express.static(path.join(__dirname, "public")) as any,
       endRequestMiddleware,
     ];
+    const externalServices: ExternalService[] = [new TypeORMPostgresDatabase()];
     return new Bootstrap({
       modules,
       httpServer,
       logService,
       middlewares,
+      externalServices,
     });
   }
 }

@@ -35,6 +35,6 @@ export class UserMemoryRepository implements UserRepository {
       ...this.#users.filter((user) => newUser.id !== user.id),
       newUser,
     ];
-    this.#users = newUsers;
+    this.#users = newUsers as User[];
   }
 }

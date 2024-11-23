@@ -17,10 +17,12 @@ const config: Config = {
   testPathIgnorePatterns: ["/tests/.*\\.stub\\.ts$", "/tests/.*\\.mock\\.ts$"],
   coveragePathIgnorePatterns: [
     "\\.enum\\.ts$",
-    "\\.factory\\.ts$",
-    "\\.module\\.ts$",
-    "\\.model\\.ts$",
     "\\.type\\.ts$",
+    "\\.model\\.ts$",
+    "\\.config\\.ts$",
+    "\\.entity\\.ts$",
+    "\\.module\\.ts$",
+    "\\.factory\\.ts$",
   ],
 };
 

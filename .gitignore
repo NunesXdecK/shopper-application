@@ -1,8 +1,11 @@
 .env
 /node_modules
+/database
 
 ## backend
 /backend/user/.env
+/backend/user/migrations
+/backend/user/subscribers
 /backend/user/coverage
 /backend/user/node_modules
 /backend/user/package-lock.json

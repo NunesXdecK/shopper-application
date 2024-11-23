@@ -14,15 +14,17 @@ export class User {
   password;
   createdAt;
   updatedAt;
+  #error: string = "";
 
   constructor({ id, name, email, password }: Partial<UserInput>) {
-    let error = "";
+    this.#error = "";
 
-    if (!name || name?.length === 0) error = "Name not informed.";
-    if (!email || email?.length === 0) error = `${error}Email not informed.`;
+    if (!name || name?.length === 0) this.#error = "Name not informed.";
+    if (!email || email?.length === 0)
+      this.#error = `${this.#error}Email not informed.`;
 
-    const isInvalid = error.length > 0;
-    if (isInvalid) throw new Error(error);
+    const isInvalid = this.#error.length > 0;
+    if (isInvalid) throw new Error(this.#error);
 
     if (!id) {
       this.id = Math.random().toString().replaceAll(".", "");
