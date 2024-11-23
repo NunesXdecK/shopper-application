@@ -11,11 +11,11 @@ export class DriverORMRepository implements DriverRepository {
 
   async findById(id: number): Promise<Driver> {
     if (!id) throw new Error("Id not informed.");
-    const user = await this.driverRepository.findOne({ where: { id } });
-    if (!user) {
-      throw new Error("User not find.");
+    const driver = await this.driverRepository.findOne({ where: { id } });
+    if (!driver) {
+      throw new Error("Driver not find.");
     }
-    return user;
+    return driver;
   }
 
   async getAvaliableForRide(

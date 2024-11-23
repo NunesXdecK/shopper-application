@@ -1,11 +1,13 @@
 import {
   Entity,
   Column,
+  OneToMany,
   PrimaryColumn,
   CreateDateColumn,
   UpdateDateColumn,
 } from "typeorm";
 import { DriverInput } from "../../../modules/ride/domains/driver.model";
+import { Ride } from "./ride.entity";
 
 @Entity()
 export class Driver implements DriverInput {
@@ -32,6 +34,9 @@ export class Driver implements DriverInput {
 
   @Column()
   description: string;
+
+  @OneToMany(() => Ride, (ride) => ride.driver)
+  rides: Ride[];
 
   @CreateDateColumn()
   createdAt: Date;

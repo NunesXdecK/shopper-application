@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { DataSource } from "typeorm";
 import { Driver } from "../entities/driver.entity";
 import { Ride } from "../entities/ride.entity";

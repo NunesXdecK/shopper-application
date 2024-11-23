@@ -16,8 +16,6 @@ services:
       - DATABASE_URL=postgresql://postgres:password@shopper-postgres:5432/shopperdb
     depends_on:
       - shopper-postgres
-    networks:
-      - app_network
 
   # frontend:
   #   image: shopper-frontend:1.0.0
@@ -47,9 +45,3 @@ services:
       - "5432:5432"
     volumes:
       - ./database:/var/lib/postgresql/data
-    networks:
-      - app_network
-
-networks:
-  app_network:
-    driver: bridge

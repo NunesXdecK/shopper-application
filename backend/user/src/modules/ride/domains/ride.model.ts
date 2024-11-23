@@ -4,11 +4,13 @@ import { User, UserInput } from "../../user/domains/user.model";
 export type RideInput = {
   id: string;
   user: string;
-  driver: string;
+  originAddress: string;
+  destinyAddress: string;
   originAddressLat: string;
   originAddressLog: string;
   destinyAddressLat: string;
   destinyAddressLog: string;
+  driver: number;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -23,6 +25,8 @@ export class Ride {
   originAddressLog;
   destinyAddressLat;
   destinyAddressLog;
+  originAddress: string;
+  destinyAddress: string;
   #error: string = "";
 
   constructor({
@@ -31,32 +35,44 @@ export class Ride {
     driver,
     createdAt,
     updatedAt,
+    originAddress,
+    destinyAddress,
     originAddressLat,
     originAddressLog,
     destinyAddressLat,
     destinyAddressLog,
   }: Partial<RideInput>) {
     if (!user || user?.length === 0) this.#error = "User not found.";
-    // if (!driver || driver?.length === 0) this.#error += "Driver not found.";
-    if (
-      !originAddressLat ||
-      !originAddressLog ||
-      originAddressLat?.length === 0 ||
-      originAddressLog?.length === 0
-    )
-      this.#error += "Origin address not found.";
-    if (
-      !destinyAddressLat ||
-      !destinyAddressLog ||
-      destinyAddressLat?.length === 0 ||
-      destinyAddressLog?.length === 0
-    )
-      this.#error += "Destiny address not found.";
-    if (
-      destinyAddressLat === originAddressLat &&
-      destinyAddressLog === originAddressLog
-    )
-      this.#error += "Origin and destiny address are the same.";
+    const isLocation = this.isLocation(originAddress, destinyAddress);
+    if (isLocation) {
+      if (
+        !originAddressLat ||
+        !originAddressLog ||
+        originAddressLat?.length === 0 ||
+        originAddressLog?.length === 0
+      )
+        this.#error += "Origin address not found.";
+      if (
+        !destinyAddressLat ||
+        !destinyAddressLog ||
+        destinyAddressLat?.length === 0 ||
+        destinyAddressLog?.length === 0
+      )
+        this.#error += "Destiny address not found.";
+      if (
+        destinyAddressLat === originAddressLat &&
+        destinyAddressLog === originAddressLog
+      )
+        this.#error += "Origin and destiny address are the same.";
+    } else {
+      if (!originAddress || originAddress?.length === 0)
+        this.#error += "Destiny address not found.";
+      if (!destinyAddress || destinyAddress?.length === 0)
+        this.#error += "Origin address not found.";
+      if (destinyAddress === originAddress)
+        this.#error += "Origin and destiny address are the same.";
+    }
+
     if (this.#error.length > 0) throw new Error(this.#error);
 
     this.id = id;
@@ -68,19 +84,36 @@ export class Ride {
     this.originAddressLog = originAddressLog;
     this.destinyAddressLat = destinyAddressLat;
     this.destinyAddressLog = destinyAddressLog;
+    this.originAddress = originAddress as string;
+    this.destinyAddress = destinyAddress as string;
   }
 
   get getRoute(): Params {
+    const isLocation = this.isLocation();
+    if (isLocation) {
+      return {
+        isLocation,
+        origin: {
+          latitude: Number(this.originAddressLat),
+          longitude: Number(this.originAddressLog),
+        },
+        destination: {
+          latitude: Number(this.destinyAddressLat),
+          longitude: Number(this.destinyAddressLog),
+        },
+      };
+    }
     return {
-      origin: {
-        latitude: Number(this.originAddressLat),
-        longitude: Number(this.originAddressLog),
-      },
-      destination: {
-        latitude: Number(this.destinyAddressLat),
-        longitude: Number(this.destinyAddressLog),
-      },
-    };
+      isLocation,
+      origin: this.originAddress,
+      destination: this.destinyAddress,
+    }
+  }
+
+  isLocation(origin = this.originAddress, destiny = this.destinyAddress) {
+    const hasOrigin = origin && origin.length > 0;
+    const hasDestiny = destiny && destiny.length > 0;
+    return !hasOrigin || !hasDestiny;
   }
 
   async calculate(driverValue: number, kilometers: number) {

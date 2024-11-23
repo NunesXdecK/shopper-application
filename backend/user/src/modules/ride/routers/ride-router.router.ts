@@ -6,8 +6,11 @@ import {
   EstimateRideResponse,
   EstimateRideUseCase,
 } from "../usecases/estimate-ride.usecase";
+import { ConfirmRide } from "../domains/cofirm-ride.model";
+import { ConfirmRideUseCase } from "../usecases/confirm-ride.usecase";
 
 export type RideUseCases = {
+  confirmRideUseCase: ConfirmRideUseCase;
   estimateRideUseCase: EstimateRideUseCase;
 };
 
@@ -35,19 +38,28 @@ export class RideRouter implements ModuleRouter {
       "/estimate",
       async (request: Request, response: Response) => {
         try {
-          const { customer_id, origin, destiny } = request.body;
+          const { location, customer_id, origin, destiny } = request.body;
           if (!customer_id) throw new Error("Customer id not received");
           if (!origin) throw new Error("Origin location id not received");
           if (!destiny) throw new Error("Destiny location id not received");
-          
-          const originLocation = request.body.origin.split(":");
-          const destinyLocation = request.body.destiny.split(":");
+
+          const isLocation = location === "true";
+          const originLocation = isLocation ? origin.split(":") : origin;
+          const destinyLocation = isLocation ? destiny.split(":") : destiny;
           const params = {
+            isLocation,
             user: request.body.customer_id,
-            originAddressLat: originLocation?.[0],
-            originAddressLog: originLocation?.[1],
-            destinyAddressLat: destinyLocation?.[0],
-            destinyAddressLog: destinyLocation?.[1],
+            ...(isLocation
+              ? {
+                  originAddressLat: originLocation?.[0],
+                  originAddressLog: originLocation?.[1],
+                  destinyAddressLat: destinyLocation?.[0],
+                  destinyAddressLog: destinyLocation?.[1],
+                }
+              : {
+                  originAddress: originLocation,
+                  destinyAddress: destinyLocation,
+                }),
           };
           const estimate = (await this.#useCases.estimateRideUseCase.execute(
             params
@@ -80,6 +92,62 @@ export class RideRouter implements ModuleRouter {
         }
       }
     );
+
+    this.#router.post(
+      "/confirm",
+      async (request: Request, response: Response) => {
+        let input;
+        try {
+          input = new ConfirmRide(request.body);
+        } catch (error: any) {
+          this.rejects({
+            response,
+            code: 400,
+            message: error.message,
+            errorCode: "INVALID_DATA",
+          });
+          return;
+        }
+
+        try {
+          await this.#useCases.confirmRideUseCase.execute(input.inputRide);
+        } catch (error: any) {
+          const information = error.message.includes("Driver not found")
+            ? {
+                code: 404,
+                errorCode: "DRIVER_NOT_FOUND",
+              }
+            : { code: 406, errorCode: "INVALID_DISTANCE" };
+          this.rejects({
+            response,
+            message: error.message,
+            code: information.code,
+            errorCode: information.errorCode,
+          });
+          return;
+        }
+
+        response.status(200).json({ success: true });
+      }
+    );
+  }
+
+  rejects({
+    code,
+    message,
+    response,
+    errorCode,
+  }: {
+    code: number;
+    message: string;
+    errorCode: string;
+    response: Response;
+  }) {
+    this.#logService.log(`[${this.constructor.name}] ${message}`);
+    response.status(code).json({
+      error_code: errorCode,
+      error_description: message,
+    });
   }
 
   get useCases() {

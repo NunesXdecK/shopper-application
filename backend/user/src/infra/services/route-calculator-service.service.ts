@@ -8,7 +8,8 @@ import { HttpHeaders } from "../../core/domains/types.type";
 import { HttpService } from "../../core/domains/http-service.type";
 
 type GoogleRoutePoint = {
-  location: {
+  address?: string;
+  location?: {
     latLng: {
       latitude: number;
       longitude: number;
@@ -65,25 +66,37 @@ export class GoogleMapsRouteCalculatorService implements RouteCalculator {
     };
   }
 
+  #mountAddress(address: string): GoogleRoutePoint {
+    return {
+      address: address,
+    };
+  }
+
   async getRouteInformation({
     origin,
+    isLocation,
     destination,
   }: Params): Promise<Response<RequestResponse>> {
     const body: RequestParams = {
       units: "IMPERIAL",
       travelMode: "DRIVE",
-      languageCode: "en-US",
+      languageCode: "pt-BR",
       computeAlternativeRoutes: false,
       routingPreference: "TRAFFIC_AWARE",
-      origin: this.#mountRoutePoint(origin),
-      destination: this.#mountRoutePoint(destination),
+      origin: isLocation
+        ? this.#mountRoutePoint(origin as RoutePoint)
+        : this.#mountAddress(origin as string),
+      destination: isLocation
+        ? this.#mountRoutePoint(destination as RoutePoint)
+        : this.#mountAddress(destination as string),
       routeModifiers: {
         avoidTolls: false,
         avoidHighways: false,
         avoidFerries: false,
       },
     };
-    
+
+    console.log(body);
     const headers = {
       "Content-Type": "application/json",
       "X-Goog-FieldMask":
@@ -100,6 +113,7 @@ export class GoogleMapsRouteCalculatorService implements RouteCalculator {
     );
     const responseBody = await (googleMapsResponse as any).json();
     const route = responseBody?.routes?.[0];
+    if (!route.distanceMeters || route.distanceMeters === 0) throw new Error("Route not found.")
     return {
       course: {
         time: route.duration,

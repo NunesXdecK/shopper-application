@@ -12,8 +12,9 @@ export type RoutePoint = {
 };
 
 export type Params = {
-  origin: RoutePoint;
-  destination: RoutePoint;
+  isLocation?: boolean;
+  origin: RoutePoint | string;
+  destination: RoutePoint | string;
 };
 
 export interface RouteCalculator<O = unknown> {

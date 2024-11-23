@@ -3,30 +3,39 @@ import {
   GoogleMapsRouteCalculatorService,
 } from "../../../infra/services/route-calculator-service.service";
 import { Driver } from "../domains/driver.model";
-import { RideRouter } from "../routers/ride.router";
+import { RideRouter } from "../routers/ride-router.router";
 import { User } from "../../user/domains/user.model";
 import { TypeORM } from "../../../infra/db/configs/type-orm.config";
+import { DistanceHelper } from "../../../core/utils/distance.helper";
 import { HttpService } from "../../../core/domains/http-service.type";
+import { ConfirmRideUseCase } from "../usecases/confirm-ride.usecase";
 import { EstimateRideUseCase } from "../usecases/estimate-ride.usecase";
 import { ORMRepository } from "../../../core/domains/orm-repository.type";
 import { ExpressRouter } from "../../../infra/routers/express-http.router";
+import { Ride as RideEntity } from "../../../infra/db/entities/ride.entity";
 import { User as UserEntity } from "../../../infra/db/entities/user.entity";
 import { FetchHttpService } from "../../../infra/services/fetch-http.service";
 import { ConsoleLogService } from "../../../infra/services/console-log.service";
 import { DriverORMRepository } from "../services/driver-orm-repository.service";
 import { Driver as DriverEntity } from "../../../infra/db/entities/driver.entity";
 import { UserORMRepository } from "../../user/services/user-orm-repository.service";
-import { DistanceHelper } from "../../../core/utils/distance.helper";
+import { RideORMRepository } from "../services/ride-orm-repository.service";
+import { Ride } from "../domains/ride.model";
 
 export class RideRouterFactory {
   static build(): RideRouter {
     const router = new ExpressRouter();
     const httpService = new FetchHttpService();
     const logService = new ConsoleLogService();
-    const driverORMRepository = TypeORM.getRepository(DriverEntity);
+    const distanceHelper = new DistanceHelper();
+    const rideORMRepository = TypeORM.getRepository(RideEntity);
     const userORMRepository = TypeORM.getRepository(UserEntity);
+    const driverORMRepository = TypeORM.getRepository(DriverEntity);
     const userRepository = new UserORMRepository(
       userORMRepository as unknown as ORMRepository<User>
+    );
+    const rideRepository = new RideORMRepository(
+      rideORMRepository as unknown as ORMRepository<Ride>
     );
     const driverRepository = new DriverORMRepository(
       driverORMRepository as unknown as ORMRepository<Driver>
@@ -37,9 +46,14 @@ export class RideRouterFactory {
     const useCases = {
       estimateRideUseCase: new EstimateRideUseCase({
         userRepository,
+        distanceHelper,
         driverRepository,
         routeCalculatorService,
-        distanceHelper: new DistanceHelper(),
+      }),
+      confirmRideUseCase: new ConfirmRideUseCase({
+        distanceHelper,
+        rideRepository,
+        driverRepository,
       }),
     };
     return new RideRouter({ router, useCases, logService });

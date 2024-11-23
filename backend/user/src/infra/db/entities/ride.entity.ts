@@ -1,34 +1,53 @@
 import {
   Entity,
   Column,
+  ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { RideInput } from "../../../modules/ride/domains/ride.model";
+import { User } from "./user.entity";
+import { Driver } from "./driver.entity";
+
+type RideOmits = {
+  user: string;
+  driver: number;
+};
+
+interface RideEntity extends Omit<RideInput, keyof RideOmits> {
+  user: User;
+  driver: Driver;
+}
 
 @Entity()
-export class Ride implements RideInput {
+export class Ride implements RideEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Column()
-  user: string;
+  @Column({ nullable: true })
+  originAddress: string;
 
-  @Column()
-  driver: string;
+  @Column({ nullable: true })
+  destinyAddress: string;
 
-  @Column()
+  @Column({ nullable: true })
   originAddressLat: string;
-  
-  @Column()
+
+  @Column({ nullable: true })
   originAddressLog: string;
 
-  @Column()
+  @Column({ nullable: true })
   destinyAddressLat: string;
 
-  @Column()
+  @Column({ nullable: true })
   destinyAddressLog: string;
+
+  @ManyToOne(() => User, (user) => user.rides)
+  user: User;
+
+  @ManyToOne(() => Driver, (driver) => driver.rides)
+  driver: Driver;
 
   @CreateDateColumn()
   createdAt: Date;
