@@ -4,13 +4,16 @@ import { User, UserInput } from "../../user/domains/user.model";
 export type RideInput = {
   id: string;
   user: string;
+  duration: string;
   originAddress: string;
   destinyAddress: string;
   originAddressLat: string;
   originAddressLog: string;
   destinyAddressLat: string;
   destinyAddressLog: string;
+  value: number;
   driver: number;
+  distance: number;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -18,7 +21,10 @@ export type RideInput = {
 export class Ride {
   id;
   user;
+  value;
   driver;
+  distance;
+  duration;
   createdAt;
   updatedAt;
   originAddressLat;
@@ -32,7 +38,10 @@ export class Ride {
   constructor({
     id,
     user,
+    value,
     driver,
+    distance,
+    duration,
     createdAt,
     updatedAt,
     originAddress,
@@ -77,7 +86,10 @@ export class Ride {
 
     this.id = id;
     this.user = user;
+    this.value = value;
     this.driver = driver;
+    this.distance = distance;
+    this.duration = duration;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
     this.originAddressLat = originAddressLat;

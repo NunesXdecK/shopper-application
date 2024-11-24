@@ -1,6 +1,10 @@
 import { Ride } from "./ride.model";
 
+export type GetAllByIdParams = {
+  driverId: number;
+  customerId: string;
+};
 export interface RideRepository {
   create: (params: Partial<Ride>) => Promise<void>;
-  getAllById: (id: string) => Promise<Partial<Ride[]>>;
+  getAllById: (params: GetAllByIdParams) => Promise<Partial<Ride[]>>;
 }

@@ -26,7 +26,9 @@ export class BootstrapFactory {
       express.static(path.join(__dirname, "public")) as any,
       endRequestMiddleware,
     ];
-    const externalServices: ExternalService[] = [new TypeORMPostgresDatabase()];
+    const externalServices: ExternalService[] = [
+      new TypeORMPostgresDatabase(logService),
+    ];
     return new Bootstrap({
       modules,
       httpServer,

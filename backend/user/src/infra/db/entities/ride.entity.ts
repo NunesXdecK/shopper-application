@@ -42,6 +42,15 @@ export class Ride implements RideEntity {
 
   @Column({ nullable: true })
   destinyAddressLog: string;
+  
+  @Column({ nullable: true })
+  duration: string;
+
+  @Column({ type: 'float', nullable: true })
+  distance: number;
+
+  @Column({ type: 'float', nullable: true })
+  value: number;
 
   @ManyToOne(() => User, (user) => user.rides)
   user: User;

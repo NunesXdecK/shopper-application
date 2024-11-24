@@ -57,8 +57,10 @@ export class UserRouter implements ModuleRouter {
 
     this.#router.post("/", async (request: Request, response: Response) => {
       try {
-        await this.#useCases.createUseCase.execute(request.body);
-        response.status(200).json({ message: "success!" });
+        const userCreated = await this.#useCases.createUseCase.execute(
+          request.body
+        );
+        response.status(200).json({ message: "success!", id: userCreated.id });
       } catch (error: any) {
         this.#logService.log(`[${this.constructor.name}] ${error.message}`);
         response.status(500).json({ message: error.message });

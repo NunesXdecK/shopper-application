@@ -30,6 +30,7 @@ export type Request = {
   method: string;
   baseUrl: string;
   body: any;
+  query: any;
   params: {
     [label: string]: any;
   };

@@ -18,16 +18,17 @@ export class UserMemoryRepository implements UserRepository {
     return user;
   }
 
-  async create(params: Partial<UserInput>): Promise<void> {
+  async create(params: Partial<UserInput>): Promise<User> {
     try {
       const user = new User(params);
       this.#users.push(user);
+      return user;
     } catch (error: any) {
       throw new Error(error.message);
     }
   }
 
-  async update(params: Partial<UserInput>): Promise<void> {
+  async update(params: Partial<UserInput>): Promise<User> {
     if (!params.id) throw new Error("Id not informed.");
     const user = await this.findById(params.id);
     const newUser = { ...user, ...params };
@@ -36,5 +37,6 @@ export class UserMemoryRepository implements UserRepository {
       newUser,
     ];
     this.#users = newUsers as User[];
+    return newUser as unknown as User;
   }
 }

@@ -103,11 +103,13 @@ export class ConfirmRide {
     return driverValue * kilometers;
   }
 
-  get inputRide(): Partial<RideInput> & { metters: number } {
+  get inputRide(): Partial<RideInput> {
     return {
+      value: this.value,
       user: this.customerId,
       driver: this.driverId,
-      metters: this.distance as number,
+      duration: this.duration,
+      distance: this.distance as number,
       originAddress: this.originAddress,
       destinyAddress: this.destinyAddress,
       originAddressLat: this.originAddressLat,

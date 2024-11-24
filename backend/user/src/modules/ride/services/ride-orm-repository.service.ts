@@ -1,18 +1,27 @@
-import { LessThanOrEqual } from "typeorm";
-import { ORMRepository } from "../../../core/domains/orm-repository.type";
 import { Ride, RideInput } from "../domains/ride.model";
-import { RideRepository } from "../domains/ride-repository.type";
+import { ORMRepository } from "../../../core/domains/orm-repository.type";
+import {
+  GetAllByIdParams,
+  RideRepository,
+} from "../domains/ride-repository.type";
 
 export class RideORMRepository implements RideRepository {
   constructor(private readonly rideRepository: ORMRepository<Ride>) {}
 
-  async getAllById(id: string): Promise<Ride[]> {
-    if (!id) throw new Error("Id not informed.");
+  async getAllById({
+    customerId,
+    driverId,
+  }: GetAllByIdParams): Promise<Ride[]> {
+    if (!customerId) throw new Error("Id not informed.");
     const rides = await this.rideRepository.find({
-      where: { user: id },
-    });
+      where: {
+        user: { id: customerId },
+        ...(driverId ? { driver: { id: driverId } } : {}),
+      },
+      relations: ["user", "driver"],
+    } as any);
     if (!rides) {
-      throw new Error("Rides not find.");
+      throw new Error("Rides not found.");
     }
     return rides;
   }

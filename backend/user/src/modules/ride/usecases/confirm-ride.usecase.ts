@@ -5,9 +5,7 @@ import { DriverRepository } from "../domains/driver-repository.type";
 import { DistanceHelper } from "../../../core/utils/distance.helper";
 import { RideRepository } from "../domains/ride-repository.type";
 
-type Params = Partial<RideInput> & {
-  metters: number;
-};
+type Params = Partial<RideInput>;
 
 type Props = {
   rideRepository: RideRepository;
@@ -32,7 +30,7 @@ export class ConfirmRideUseCase implements UseCase<Params, any> {
         ride.driver as number
       );
       if (
-        this.#distanceHelper.metterToKilometer(params.metters) <
+        this.#distanceHelper.metterToKilometer(params.distance as number) <
         Number(driver?.minimumKM || 0)
       )
         throw new Error("KM lower than minimum.");

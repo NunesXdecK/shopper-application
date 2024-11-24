@@ -18,7 +18,7 @@ export class UserORMRepository implements UserRepository {
     return user;
   }
 
-  async create(params: Partial<UserInput>): Promise<void> {
+  async create(params: Partial<UserInput>): Promise<User> {
     try {
       new User(params);
       const user = this.userRepository.create(params);
@@ -27,19 +27,19 @@ export class UserORMRepository implements UserRepository {
         updateAt: undefined,
         createdAt: undefined,
       });
-      await this.userRepository.save(user);
+      return await this.userRepository.save(user) as unknown as User;
     } catch (error: any) {
       throw new Error(error.message);
     }
   }
 
-  async update(params: Partial<UserInput>): Promise<void> {
+  async update(params: Partial<UserInput>): Promise<User> {
     if (!params.id) throw new Error("Id not informed.");
     const user = await this.findById(params.id);
     Object.assign(user, {
       updateAt: undefined,
     });
     if (!user) throw new Error("User does not exist.");
-    await this.userRepository.save({ ...user, ...params });
+    return await this.userRepository.save({ ...user, ...params }) as unknown as User;
   }
 }

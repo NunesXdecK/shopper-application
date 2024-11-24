@@ -13,28 +13,28 @@ services:
     environment:
       - NODE_ENV=development
       - GOOGLE_API_KEY=${GOOGLE_API_KEY}
-      - DATABASE_URL=postgresql://postgres:password@shopper-postgres:5432/shopperdb
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/shopperdb
     depends_on:
-      - shopper-postgres
+      - postgres
 
-  # frontend:
-  #   image: shopper-frontend:1.0.0
-  #   build:
-  #     context: ./frontend/user/
-  #     dockerfile: .docker/Dockerfile
-  #   ports:
-  #     - "80:5173"
-  #   volumes:
-  #     - ./frontend/user:/app
-  #     - /app/node_modules
-  #   environment:
-  #     - NODE_ENV: development
-  #     - GOOGLE_API_KEY=${GOOGLE_API_KEY}
-  #     - BACKEND_URL: http://shopper-backend:8080/
-  #   depends_on:
-  #       - shopper-backend
+  frontend:
+    image: shopper-frontend:1.0.0
+    build:
+      context: ./frontend/user/
+      dockerfile: .docker/Dockerfile
+    ports:
+      - "80:5173"
+    volumes:
+      - ./frontend/user:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - BACKEND_URL=http://shopper-backend:8080/
+    depends_on:
+        - backend
 
-  shopper-postgres:
+  postgres:
     image: postgres:15
     container_name: shopper-postgres
     environment:

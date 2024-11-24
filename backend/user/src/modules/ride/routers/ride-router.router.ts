@@ -8,10 +8,14 @@ import {
 } from "../usecases/estimate-ride.usecase";
 import { ConfirmRide } from "../domains/cofirm-ride.model";
 import { ConfirmRideUseCase } from "../usecases/confirm-ride.usecase";
+import { RideListUseCase } from "../usecases/ride-list.usecase";
+import { Ride } from "../domains/ride.model";
+import { Driver } from "../domains/driver.model";
 
 export type RideUseCases = {
   confirmRideUseCase: ConfirmRideUseCase;
   estimateRideUseCase: EstimateRideUseCase;
+  rideListUseCase: RideListUseCase;
 };
 
 type Props = {
@@ -34,6 +38,48 @@ export class RideRouter implements ModuleRouter {
   }
 
   #defineRoutes() {
+    this.#router.get(
+      "/:customer_id",
+      async (request: Request, response: Response) => {
+        try {
+          const params = {
+            driverId: request.query.driver_id,
+            customerId: request.params.customer_id,
+          };
+          const rides = await this.#useCases.rideListUseCase.execute(params);
+          const result = {
+            customer_id: params.customerId,
+            rides: rides.map((ride: Ride) => ({
+              id: ride.id,
+              value: ride.value,
+              date: ride.createdAt,
+              duration: ride.duration,
+              distance: ride.distance,
+              origin: ride.originAddress,
+              destination: ride.destinyAddress,
+              driver: {
+                id: (ride.driver as unknown as Driver).id,
+                name: (ride.driver as unknown as Driver).name,
+              },
+            })),
+          };
+          response.status(200).json(result);
+        } catch (error: any) {
+          const information = error.message.includes("Driver not found")
+            ? {
+                code: 400,
+                errorCode: "INVALID_DRIVER",
+              }
+            : { code: 404, errorCode: "NO_RIDES_FOUND" };
+          this.rejects({
+            response,
+            message: error.message,
+            code: information.code,
+            errorCode: information.errorCode,
+          });
+        }
+      }
+    );
     this.#router.post(
       "/estimate",
       async (request: Request, response: Response) => {

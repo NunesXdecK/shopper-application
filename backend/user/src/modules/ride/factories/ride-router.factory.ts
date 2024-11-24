@@ -2,9 +2,11 @@ import {
   RequestResponse,
   GoogleMapsRouteCalculatorService,
 } from "../../../infra/services/route-calculator-service.service";
+import { Ride } from "../domains/ride.model";
 import { Driver } from "../domains/driver.model";
-import { RideRouter } from "../routers/ride-router.router";
 import { User } from "../../user/domains/user.model";
+import { RideRouter } from "../routers/ride-router.router";
+import { RideListUseCase } from "../usecases/ride-list.usecase";
 import { TypeORM } from "../../../infra/db/configs/type-orm.config";
 import { DistanceHelper } from "../../../core/utils/distance.helper";
 import { HttpService } from "../../../core/domains/http-service.type";
@@ -12,6 +14,7 @@ import { ConfirmRideUseCase } from "../usecases/confirm-ride.usecase";
 import { EstimateRideUseCase } from "../usecases/estimate-ride.usecase";
 import { ORMRepository } from "../../../core/domains/orm-repository.type";
 import { ExpressRouter } from "../../../infra/routers/express-http.router";
+import { RideORMRepository } from "../services/ride-orm-repository.service";
 import { Ride as RideEntity } from "../../../infra/db/entities/ride.entity";
 import { User as UserEntity } from "../../../infra/db/entities/user.entity";
 import { FetchHttpService } from "../../../infra/services/fetch-http.service";
@@ -19,8 +22,6 @@ import { ConsoleLogService } from "../../../infra/services/console-log.service";
 import { DriverORMRepository } from "../services/driver-orm-repository.service";
 import { Driver as DriverEntity } from "../../../infra/db/entities/driver.entity";
 import { UserORMRepository } from "../../user/services/user-orm-repository.service";
-import { RideORMRepository } from "../services/ride-orm-repository.service";
-import { Ride } from "../domains/ride.model";
 
 export class RideRouterFactory {
   static build(): RideRouter {
@@ -52,6 +53,10 @@ export class RideRouterFactory {
       }),
       confirmRideUseCase: new ConfirmRideUseCase({
         distanceHelper,
+        rideRepository,
+        driverRepository,
+      }),
+      rideListUseCase: new RideListUseCase({
         rideRepository,
         driverRepository,
       }),

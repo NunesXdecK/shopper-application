@@ -6,17 +6,17 @@ type Props = {
   userRepository: UserRepository;
 };
 
-export class CreateUserUseCase implements UseCase<Partial<UserInput>, void> {
+export class CreateUserUseCase implements UseCase<Partial<UserInput>, User> {
   #userRepository;
 
   constructor({ userRepository }: Props) {
     this.#userRepository = userRepository;
   }
 
-  async execute(params: Partial<UserInput>): Promise<void> {
+  async execute(params: Partial<UserInput>): Promise<User> {
     try {
       const user = new User(params);
-      this.#userRepository.create(user);
+      return this.#userRepository.create(user);
     } catch (error: any) {
       throw new Error(error);
     }
