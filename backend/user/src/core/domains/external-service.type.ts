@@ -1,4 +1,4 @@
 export interface ExternalService {
   name: string;
-  init: () => Promise<void>;
+  init: () => Promise<boolean>;
 }

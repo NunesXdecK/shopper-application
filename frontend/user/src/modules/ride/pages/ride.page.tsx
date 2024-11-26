@@ -31,13 +31,14 @@ export const Ride = () => {
             estimate={async () => {
               setLoading(true);
               try {
-                await estimate();
-                setStep(StepsValues.DRIVER);
+                const result = await estimate();
+                if (result === true) setStep(StepsValues.DRIVER);
               } catch (error) {
                 console.log(error);
               } finally {
                 setLoading(false);
               }
+              return true;
             }}
           />
         </Steps.Step>
@@ -48,9 +49,9 @@ export const Ride = () => {
             select={async (driver) => {
               if (!params) return;
               if (!result) return;
-              setLoading(false);
+              setLoading(true);
               try {
-                await confirm({
+                const success = await confirm({
                   value: driver.value,
                   origin: params.origin,
                   duration: result.duration,
@@ -62,11 +63,11 @@ export const Ride = () => {
                     name: driver?.name,
                   },
                 });
-                setStep(StepsValues.LIST);
+                if (success?.success === true) setStep(StepsValues.LIST);
               } catch (error) {
                 console.log(error);
               } finally {
-                setLoading(true);
+                setLoading(false);
               }
             }}
             onBack={() => setStep(StepsValues.FORM)}

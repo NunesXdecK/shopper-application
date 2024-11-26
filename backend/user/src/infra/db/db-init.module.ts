@@ -28,24 +28,30 @@ export class TypeORMPostgresDatabase implements ExternalService {
           `[ExternalService][${this.constructor.name}] Initialized.`
         );
       }
+      return true;
     } catch (error: any) {
+      this.#logService.log(
+        `[ExternalService][${this.constructor.name}] Failed to initialize: ${error.message}.`
+      );
       if (
         error.message.includes("connect ECONNREFUSED") ||
         error.message.includes("the database system is starting up")
-      )
+      ) {
         this.retry();
-      throw new Error(error);
+      }
+      return false;
     }
   }
 
   async retry() {
     this.#isRetry = true;
     let secondsToRetry = 0;
+    const waitTime = 15;
     const interval: NodeJS.Timeout = setInterval(() => {
-      if (secondsToRetry < 5) {
+      if (secondsToRetry < waitTime) {
         this.#logService.log(
           `[${this.constructor.name}] Connection retry in ${
-            5 - secondsToRetry
+            waitTime - secondsToRetry
           } seconds.`
         );
         secondsToRetry++;

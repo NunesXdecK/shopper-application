@@ -29,7 +29,7 @@ export const RideListFilter = ({
           <Form.Label htmlFor="user-id">Usuário</Form.Label>
           <Form.Input
             id="user-id"
-            loading={loading}
+            disabled={true}
             className="mt-2"
             value={filters.customerId}
             onChange={(event) =>

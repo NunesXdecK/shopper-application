@@ -1,5 +1,6 @@
 import { RideService } from "../domains/ride-service.type";
 import { UseCase } from "../../../core/domains/use-case.type";
+import { ErrorService } from "../../../core/domains/error-service.type";
 
 export interface RideDriver {
   id: number;
@@ -29,12 +30,21 @@ export interface RideListOutput {
 
 interface UseCaseInput {
   rideService: RideService;
+  errorHandlerService: ErrorService;
 }
 
 export const rideListUsecase = ({
   rideService,
-}: UseCaseInput): UseCase<RideListInput, RideListOutput> => {
+  errorHandlerService,
+}: UseCaseInput): UseCase<RideListInput, RideListOutput | null> => {
   return {
-    execute: async (params: RideListInput) => rideService.rideList(params),
+    execute: async (params: RideListInput) => {
+      try {
+        return rideService.rideList(params);
+      } catch (error: unknown) {
+        errorHandlerService.handler(error);
+        return null;
+      }
+    },
   };
 };

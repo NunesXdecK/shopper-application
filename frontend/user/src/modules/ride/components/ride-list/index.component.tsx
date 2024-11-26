@@ -10,7 +10,8 @@ interface Props {
 
 export const RideListPage = ({ customerId }: Props) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const { filters, list, driverOptions, handle, handleFilter } = useRideList(customerId);
+  const { filters, list, driverOptions, handle, handleFilter } =
+    useRideList(customerId);
 
   useEffect(() => {
     if (customerId) {
@@ -20,7 +21,7 @@ export const RideListPage = ({ customerId }: Props) => {
     }
   }, [customerId, handle]);
 
-  if (loading) return <Loadings.Scale />;
+  if (loading) return;
   return (
     <>
       <RideListFilter
@@ -39,7 +40,7 @@ export const RideListPage = ({ customerId }: Props) => {
           }
         }}
       />
-      <RideList list={list} />
+      {loading ? <Loadings.ScaleMessage /> : <RideList list={list} />}
     </>
   );
 };

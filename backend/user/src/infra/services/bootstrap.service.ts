@@ -40,13 +40,12 @@ export class Bootstrap {
   async #initializeExternalServices() {
     this.#externalServices.forEach(async (service: ExternalService) => {
       try {
-        await service.init();
-        this.#logService.log(`[ExternalService][${service.name}] Initialized.`);
+        const result = await service.init();
+        if (result) this.#logService.log(`[ExternalService][${service.name}] Initialized.`);
       } catch (error: any) {
         this.#logService.log(
-          `[ExternalService][${service.name}] Failed to initialize.`
+          `[ExternalService][${service.name}] Failed to initialize: ${error.message}`
         );
-        this.#logService.log(error.message);
       }
     });
   }

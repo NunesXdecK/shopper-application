@@ -37,7 +37,6 @@ export const RideForm = ({ loading, params, onChange, estimate }: Props) => {
                 onChange={(event) =>
                   onChange("customerId", event.currentTarget.value)
                 }
-                required
               />
             </div>
           </div>
@@ -52,7 +51,6 @@ export const RideForm = ({ loading, params, onChange, estimate }: Props) => {
                 onChange={(event) =>
                   onChange("origin", event.currentTarget.value)
                 }
-                required
               />
             </div>
           </div>
@@ -67,7 +65,6 @@ export const RideForm = ({ loading, params, onChange, estimate }: Props) => {
                 onChange={(event) =>
                   onChange("destiny", event.currentTarget.value)
                 }
-                required
               />
             </div>
           </div>

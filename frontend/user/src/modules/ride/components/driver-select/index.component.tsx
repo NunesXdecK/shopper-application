@@ -1,5 +1,4 @@
 import { useCallback } from "react";
-import { RideComponents } from "..";
 import { Button } from "../../../../components/ui";
 import { DriverSelectItem } from "./driver-select-item";
 import { Loadings } from "../../../../components/ui/loadings";
@@ -41,10 +40,7 @@ export const DriverSelect = ({
         ></img>
       </div>
       {loading ? (
-        <>
-          <Loadings.Scale />
-          <RideComponents.Title>Confirmando...</RideComponents.Title>
-        </>
+        <Loadings.ScaleMessage message="Confirmando viagem..." />
       ) : (
         <ul role="list" className="divide-y divide-gray-100">
           {result?.option?.map((driver) => (
@@ -57,11 +53,15 @@ export const DriverSelect = ({
           ))}
         </ul>
       )}
-      <div className="mt-2">
-        <Button.Primary disabled={loading} onClick={() => onBack()}>
-          Voltar
-        </Button.Primary>
-      </div>
+      {!loading ? (
+        <div className="mt-2">
+          <Button.Primary disabled={loading} onClick={() => onBack()}>
+            Voltar
+          </Button.Primary>
+        </div>
+      ) : (
+        <></>
+      )}
     </>
   );
 };

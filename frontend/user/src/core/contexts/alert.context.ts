@@ -1,8 +1,9 @@
 import { createContext } from "react";
 
 export interface AlertMessage {
-  message: string;
-  type: "INFORMATION" | "ERROR";
+  id?: string;
+  message?: string;
+  type?: "INFORMATION" | "ERROR";
 }
 
 export interface AlertContext {

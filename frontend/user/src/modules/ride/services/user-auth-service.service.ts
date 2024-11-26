@@ -1,4 +1,4 @@
-import { AuthService } from "../../../core/domains/auth-service";
+import { AuthService } from "../../../core/domains/auth-service.type";
 import { HttpService } from "../../../core/domains/http-service.type";
 import { LocalStorageService } from "../../../core/domains/local-storage-service";
 import { HttpRequestArgs } from "../../../core/domains/types.type";

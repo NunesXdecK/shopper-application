@@ -1,17 +1,30 @@
+import {
+  BackendError,
+  BackendErrorProps,
+} from "../../core/domains/backend-error.type";
+import { ErrorService } from "../../core/domains/error-service.type";
 import { HttpService } from "../../core/domains/http-service.type";
 import { HttpRequestArgs } from "../../core/domains/types.type";
 import { HttpMethods } from "../../core/enums/http-methods.enum";
 
-export const fetchHttpService = <O = unknown>(): HttpService => {
+interface Props {
+  errorHandlerService: ErrorService;
+}
+
+export const fetchHttpService = <O = unknown>({
+  errorHandlerService,
+}: Props): HttpService => {
   const baseHeaders = {
     "Content-Type": "application/json",
   };
 
   const handleResponse = async (response: Response): Promise<O> => {
-    if (!response.ok) {
-      throw new Error(`[Error][FetchHttpService]: ${response.status}`);
+    const hasError = !response.ok;
+    const result = (await response.json()) as unknown as Promise<O>;
+    if (hasError) {
+      errorHandlerService.handler(new BackendError(result as unknown as BackendErrorProps));
     }
-    return response.json() as unknown as Promise<O>;
+    return result;
   };
 
   return {

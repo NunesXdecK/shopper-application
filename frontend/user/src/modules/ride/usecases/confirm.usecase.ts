@@ -1,5 +1,6 @@
 import { RideService } from "../domains/ride-service.type";
 import { UseCase } from "../../../core/domains/use-case.type";
+import { ErrorService } from "../../../core/domains/error-service.type";
 
 export interface ConfirmInput {
   origin: string;
@@ -20,12 +21,21 @@ export interface ConfirmOutput {
 
 interface UseCaseInput {
   rideService: RideService;
+  errorHandlerService: ErrorService;
 }
 
 export const confirmUsecase = ({
   rideService,
-}: UseCaseInput): UseCase<ConfirmInput, ConfirmOutput> => {
+  errorHandlerService,
+}: UseCaseInput): UseCase<ConfirmInput, ConfirmOutput | null> => {
   return {
-    execute: async (params: ConfirmInput) => rideService.confirm(params),
+    execute: async (params: ConfirmInput) => {
+      try {
+        return rideService.confirm(params);
+      } catch (error: unknown) {
+        errorHandlerService.handler(error);
+        return null;
+      }
+    },
   };
 };
