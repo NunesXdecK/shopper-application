@@ -96,7 +96,6 @@ export class GoogleMapsRouteCalculatorService implements RouteCalculator {
       },
     };
 
-    console.log(body);
     const headers = {
       "Content-Type": "application/json",
       "X-Goog-FieldMask":
@@ -113,11 +112,12 @@ export class GoogleMapsRouteCalculatorService implements RouteCalculator {
     );
     const responseBody = await (googleMapsResponse as any).json();
     const route = responseBody?.routes?.[0];
-    if (!route.distanceMeters || route.distanceMeters === 0) throw new Error("Route not found.")
+    if (!route || !route?.distanceMeters || route?.distanceMeters === 0)
+      throw new Error("Route not found.");
     return {
       course: {
         time: route.duration,
-        distance: route.distanceMeters,
+        distance: route?.distanceMeters,
       },
       originalResponse: route,
     };

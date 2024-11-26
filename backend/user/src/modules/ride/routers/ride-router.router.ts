@@ -13,9 +13,9 @@ import { Ride } from "../domains/ride.model";
 import { Driver } from "../domains/driver.model";
 
 export type RideUseCases = {
+  rideListUseCase: RideListUseCase;
   confirmRideUseCase: ConfirmRideUseCase;
   estimateRideUseCase: EstimateRideUseCase;
-  rideListUseCase: RideListUseCase;
 };
 
 type Props = {
@@ -58,8 +58,8 @@ export class RideRouter implements ModuleRouter {
               origin: ride.originAddress,
               destination: ride.destinyAddress,
               driver: {
-                id: (ride.driver as unknown as Driver).id,
-                name: (ride.driver as unknown as Driver).name,
+                id: (ride?.driver as unknown as Driver)?.id,
+                name: (ride?.driver as unknown as Driver)?.name,
               },
             })),
           };
@@ -94,7 +94,7 @@ export class RideRouter implements ModuleRouter {
           const destinyLocation = isLocation ? destiny.split(":") : destiny;
           const params = {
             isLocation,
-            user: request.body.customer_id,
+            customerId: request.body.customer_id,
             ...(isLocation
               ? {
                   originAddressLat: originLocation?.[0],

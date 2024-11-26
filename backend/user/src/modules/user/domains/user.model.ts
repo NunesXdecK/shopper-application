@@ -20,8 +20,6 @@ export class User {
     this.#error = "";
 
     if (!name || name?.length === 0) this.#error = "Name not informed.";
-    if (!email || email?.length === 0)
-      this.#error = `${this.#error}Email not informed.`;
 
     const isInvalid = this.#error.length > 0;
     if (isInvalid) throw new Error(this.#error);

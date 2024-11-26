@@ -18,6 +18,7 @@ services:
       - postgres
 
   frontend:
+    container_name: shopper-frontend
     image: shopper-frontend:1.0.0
     build:
       context: ./frontend/user/
@@ -28,9 +29,9 @@ services:
       - ./frontend/user:/app
       - /app/node_modules
     environment:
-      - NODE_ENV=development
-      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
-      - BACKEND_URL=http://shopper-backend:8080/
+      - VITE_NODE_ENV=development
+      - VITE_GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - VITE_BACKEND_URL=http://localhost:8080/
     depends_on:
         - backend
 

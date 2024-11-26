@@ -106,9 +106,9 @@ export class ConfirmRide {
   get inputRide(): Partial<RideInput> {
     return {
       value: this.value,
-      user: this.customerId,
       driver: this.driverId,
       duration: this.duration,
+      customerId: this.customerId,
       distance: this.distance as number,
       originAddress: this.originAddress,
       destinyAddress: this.destinyAddress,

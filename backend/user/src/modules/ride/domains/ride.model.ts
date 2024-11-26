@@ -5,6 +5,7 @@ export type RideInput = {
   id: string;
   user: string;
   duration: string;
+  customerId: string;
   originAddress: string;
   destinyAddress: string;
   originAddressLat: string;
@@ -27,6 +28,7 @@ export class Ride {
   duration;
   createdAt;
   updatedAt;
+  customerId;
   originAddressLat;
   originAddressLog;
   destinyAddressLat;
@@ -44,6 +46,7 @@ export class Ride {
     duration,
     createdAt,
     updatedAt,
+    customerId,
     originAddress,
     destinyAddress,
     originAddressLat,
@@ -51,7 +54,7 @@ export class Ride {
     destinyAddressLat,
     destinyAddressLog,
   }: Partial<RideInput>) {
-    if (!user || user?.length === 0) this.#error = "User not found.";
+    // if (!user || user?.length === 0) this.#error = "User not found.";
     const isLocation = this.isLocation(originAddress, destinyAddress);
     if (isLocation) {
       if (
@@ -92,6 +95,7 @@ export class Ride {
     this.duration = duration;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
+    this.customerId = customerId;
     this.originAddressLat = originAddressLat;
     this.originAddressLog = originAddressLog;
     this.destinyAddressLat = destinyAddressLat;

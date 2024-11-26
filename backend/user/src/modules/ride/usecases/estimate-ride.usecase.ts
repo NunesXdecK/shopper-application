@@ -43,7 +43,7 @@ export class EstimateRideUseCase implements UseCase<Partial<RideInput>, any> {
   async execute(params: Partial<RideInput>): Promise<EstimateRideResponse> {
     try {
       const ride = new Ride(params);
-      await this.#userRepository.findById(ride.user as string);
+      // await this.#userRepository.findById(ride.user as string);
       const calc = await this.#routeCalculatorService.getRouteInformation(
         ride.getRoute
       );

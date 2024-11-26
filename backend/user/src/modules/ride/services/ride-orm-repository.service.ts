@@ -15,10 +15,10 @@ export class RideORMRepository implements RideRepository {
     if (!customerId) throw new Error("Id not informed.");
     const rides = await this.rideRepository.find({
       where: {
-        user: { id: customerId },
+        customerId,
         ...(driverId ? { driver: { id: driverId } } : {}),
       },
-      relations: ["user", "driver"],
+      relations: ["driver"],
     } as any);
     if (!rides) {
       throw new Error("Rides not found.");

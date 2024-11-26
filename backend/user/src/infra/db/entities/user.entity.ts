@@ -17,10 +17,10 @@ export class User implements UserInput {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ nullable: true })
   email: string;
 
-  @Column()
+  @Column({ nullable: true })
   password: string;
 
   @OneToMany(() => Ride, (ride) => ride.user)

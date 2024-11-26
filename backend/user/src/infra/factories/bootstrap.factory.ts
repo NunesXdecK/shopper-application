@@ -1,4 +1,5 @@
 import path from "path";
+import cors from "cors";
 import express from "express";
 import cookieParser from "cookie-parser";
 import { Bootstrap } from "../services/bootstrap.service";
@@ -22,6 +23,7 @@ export class BootstrapFactory {
     const middlewares: RequestHandler<void>[] = [
       express.json() as any,
       cookieParser() as any,
+      cors() as any,
       express.urlencoded({ extended: false }) as any,
       express.static(path.join(__dirname, "public")) as any,
       endRequestMiddleware,

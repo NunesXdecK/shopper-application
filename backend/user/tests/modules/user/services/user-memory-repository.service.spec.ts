@@ -27,14 +27,6 @@ describe("UserMemoryRepository", () => {
     expect(users[0].email).toBe("teste@test");
   });
 
-  it("should throw an error when invalid input", async () => {
-    const userInput = {
-      name: "teste",
-    };
-
-    await expect(userRepo.create(userInput)).rejects.toThrow("Email not informed.");
-  });
-
   it("should get all users", async () => {
     const userInput1 = {
       id: "1",

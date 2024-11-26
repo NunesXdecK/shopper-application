@@ -1,12 +1,13 @@
 FROM node:20
 
-
 WORKDIR /app
+
 COPY package*.json ./
+
 RUN npm install
+
 COPY . .
 
-ENV PORT=${BACKEND_PORT}
-EXPOSE ${PORT}
+EXPOSE 8080
 
 CMD ["npm", "run", "dev"] 

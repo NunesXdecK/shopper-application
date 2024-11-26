@@ -35,15 +35,6 @@ describe("CreateUserUseCase", () => {
     );
   });
 
-  it("should not call the repository create method with invalid input", async () => {
-    const invalidInput = { name: "test" };
-
-    await expect(createUserUseCase.execute(invalidInput)).rejects.toThrow(
-      "Email not informed."
-    );
-    expect(userRepositoryMock.create).not.toHaveBeenCalled();
-  });
-
   it("should handle errors thrown by the repository", async () => {
     const userInput = {
       name: "test",

@@ -14,8 +14,8 @@ type Props = {
 };
 export class ConfirmRideUseCase implements UseCase<Params, any> {
   #distanceHelper: DistanceHelper;
-  #driverRepository: DriverRepository;
   #rideRepository: RideRepository;
+  #driverRepository: DriverRepository;
 
   constructor({ rideRepository, distanceHelper, driverRepository }: Props) {
     this.#rideRepository = rideRepository;

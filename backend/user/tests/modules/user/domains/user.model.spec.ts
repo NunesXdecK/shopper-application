@@ -50,18 +50,6 @@ describe("User", () => {
     }).toThrow("Name not informed.");
   });
 
-  it("should throw an error when email is not provided", () => {
-    expect(() => {
-      new User({ name: "test" });
-    }).toThrow("Email not informed.");
-  });
-
-  it("should throw an error when both name and email are not provided", () => {
-    expect(() => {
-      new User({ name: "", email: "" });
-    }).toThrow("Name not informed.Email not informed.");
-  });
-
   it("should generate id and password automatically when not provided", () => {
     const input: Partial<UserInput> = {
       name: "test",
